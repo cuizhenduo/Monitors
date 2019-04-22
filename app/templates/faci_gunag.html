@@ -10,26 +10,58 @@
     <link href="{{ static_url('css/dashboard.css') }}" rel="stylesheet">
     <script src="{{ static_url('js/analogClock.js') }}"></script>
     <script src="https://cdn.bootcss.com/echarts/4.2.0-rc.1/echarts-en.min.js"></script>
+    <script src="{{ static_url('js/faci.js') }}"></script>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <style type="text/css">
+        table
+        {
+            border-collapse: collapse;
+            margin: 0 auto;
+            text-align: center;
+        }
+        table td, table th
+        {
+            border: 1px solid #cad9ea;
+            color: #666;
+            height: 30px;
+        }
+        table thead th
+        {
+            background-color: #CCE8EB;
+            width: 200px;
+        }
+        table tr:nth-child(odd)
+        {
+            background: #fff;
+        }
+        table tr:nth-child(even)
+        {
+            background: #F5FAFA;
+        }
+    </style>
 </head>
 
 <body>
 <h2 align="center">光照设备控制</h2>
-<table class="table table-hover">
+<table width="90%" class="table">
+    <thead>
     <tr align="center">
-        <td>编号</td>
-        <td>设备</td>
-        <td>状态</td>
-        <td colspan="2">操作</td>
+        <th>编号</th>
+        <th>设备</th>
+        <th>状态</th>
+        <th colspan="2">操作</th>
     </tr>
-{% for i in data1['faci']%}
+    </thead>
+    {% for i in data1['faci']%}
         <tr align="center">
             <td>{{ i.id }}</td>
             <td>{{ i.name }}</td>
-            <td>{{ i.stat }}</td>
-            <td><button type="button" class="btn btn-primary">打开</button></td>
-            <td><button type="button" class="btn btn-primary">关闭</button></td>
+            <td id={{ i.id }}>{{ i.stat }}</td>
+            <td><button type="button" class="btn btn-primary" onclick="myOpen({{ i.id }})">打开</button></td>
+            <td><button type="button" class="btn btn-primary" onclick="myClose({{ i.id }})">关闭</button></td>
         </tr>
-{% end %}
+    {% end %}
+
 </table>
 <script src="https://cdn.bootcss.com/lazysizes/4.0.2/lazysizes.min.js"></script>
 <!--导入sockjs-client-->

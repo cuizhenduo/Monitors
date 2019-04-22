@@ -10,6 +10,8 @@
     <link href="{{ static_url('css/dashboard.css') }}" rel="stylesheet">
     <script src="{{ static_url('js/analogClock.js') }}"></script>
     <script src="https://cdn.bootcss.com/echarts/4.2.0-rc.1/echarts-en.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+</script>
     {% block head %}{% end %}
 </head>
 
@@ -37,6 +39,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="/fh/">
                             设备控制
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="http://127.0.0.1:8080/admin/">
+                            自动控制条件设置
                         </a>
                     </li>
                 </ul>

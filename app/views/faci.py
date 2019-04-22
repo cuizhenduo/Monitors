@@ -2,7 +2,7 @@
 import tornado.web
 from app.views.views_common import Commonhandler
 import tornado.gen
-from app.models.models import Facility
+from app.models.models import Facility,AutoFaci
 from app.tools.orm import ORM
 import tornado.concurrent
 #定义设备视图
@@ -15,7 +15,8 @@ class FaciHandler(Commonhandler):
     def get_response(self):
         session = ORM.db()
         data = session.query(Facility).all()
-        self.html("faci.html",data1=dict(faci=data))
+        auto = session.query(AutoFaci).one()
+        self.html("faci.html",data1=dict(faci=data,auto=auto))
 
 
 

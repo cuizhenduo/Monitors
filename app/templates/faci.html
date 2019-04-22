@@ -1,25 +1,77 @@
 {% extends "layout.html" %}
 {% block head %}
+
 <script src="{{ static_url('echarts-liquidfill/echarts-liquidfill.min.js') }}"></script>
+<script src="{{ static_url('js/faci.js') }}"></script>
 {% end %}
 {% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-header">自动控制</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 pad-left">
+                        <table width="90%" class="table table-striped">
+                            <thead>
+                            <tr align="center">
+                                <th>状态</th>
+                                <th colspan="2">操作</th>
+                            </tr>
+                            </thead>
+                            <tr align="center">
+                                <td id={{data1['auto'].id}}>{{data1['auto'].stat}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary">打开</button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary">关闭</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<table class="table table-hover">
-    <tr align="center">
-        <td>编号</td>
-        <td>设备</td>
-        <td>状态</td>
-        <td colspan="2">操作</td>
-    </tr>
-    {% for i in data1['faci']%}
-        <tr align="center">
-            <td>{{ i.id }}</td>
-            <td>{{ i.name }}</td>
-            <td>{{ i.stat }}</td>
-            <td><button type="button" class="btn btn-primary">打开</button></td>
-            <td><button type="button" class="btn btn-primary">关闭</button></td>
-        </tr>
-    {% end %}
+    <div class="col-md-12">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-header">设备控制</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 pad-left">
+                        <table width="90%" class="table table-striped">
+                            <thead>
+                            <tr align="center">
+                                <th>编号</th>
+                                <th>设备</th>
+                                <th>状态</th>
+                                <th colspan="2">操作</th>
+                            </tr>
+                            </thead>
+                            {% for i in data1['faci']%}
+                            <tr align="center">
+                                <td>{{ i.id }}</td>
+                                <td>{{ i.name }}</td>
+                                <td id={{ i.id }}>{{ i.stat }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" onclick="myOpen({{ i.id }})">打开
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" onclick="myClose({{ i.id }})">关闭
+                                    </button>
+                                </td>
+                            </tr>
+                            {% end %}
 
-</table>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% end %}

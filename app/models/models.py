@@ -28,6 +28,60 @@ class Facility(Base):
     stat = Column(VARCHAR(20))  #状态
     address = Column(VARCHAR(60))  #ip地址，用于控制设备
     kind = Column(VARCHAR(20))  #类别
+
+#自动控制
+class AutoFaci(Base):
+    __tablename__ = "auto"  #指定表名称
+    id = Column(BIGINT,primary_key=True)
+    stat = Column(VARCHAR(20))  #状态
+
+#空气温度
+class Kongqiwendu(Base):
+    __tablename__ = "kongqiwendu"  #指定表名称
+    id = Column(BIGINT,primary_key=True)
+    percent = Column(DECIMAL(6,2))  #温度使用百分比
+    create_date = Column(DATE)
+    create_time = Column(TIME)
+    create_dt = Column(DATETIME)
+
+#空气湿度
+class Kongqishidu(Base):
+    __tablename__ = "kongqishidu"  #指定表名称
+    id = Column(BIGINT,primary_key=True)
+    percent = Column(DECIMAL(6,2))  #湿度使用百分比
+    create_date = Column(DATE)
+    create_time = Column(TIME)
+    create_dt = Column(DATETIME)
+
+
+# 土壤温度
+class Turangwendu(Base):
+    __tablename__ = "turangwendu"  # 指定表名称
+    id = Column(BIGINT, primary_key=True)
+    percent = Column(DECIMAL(6, 2))  # 温度使用百分比
+    create_date = Column(DATE)
+    create_time = Column(TIME)
+    create_dt = Column(DATETIME)
+
+
+# 土壤湿度
+class Turangshidu(Base):
+    __tablename__ = "turangshidu"  # 指定表名称
+    id = Column(BIGINT, primary_key=True)
+    percent = Column(DECIMAL(6, 2))  # 湿度使用百分比
+    create_date = Column(DATE)
+    create_time = Column(TIME)
+    create_dt = Column(DATETIME)
+
+# 光照强度
+class Guangzhao(Base):
+    __tablename__ = "guangzhao"  # 指定表名称
+    id = Column(BIGINT, primary_key=True)
+    percent = Column(DECIMAL(6, 2))  # 湿度使用百分比
+    create_date = Column(DATE)
+    create_time = Column(TIME)
+    create_dt = Column(DATETIME)
+
 #统计内存
 class Mem(Base):
     __tablename__ = "mem"  #指定表名称

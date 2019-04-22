@@ -7,6 +7,7 @@ from app.views.views_login import LoginHandler as login,ReceLogin as RL,AppLogin
 from app.views.faci import FaciHandler as fh,Faci_wenHandler as fwh,Faci_shiHandler as fsh,Faci_guangHandler as fgh
 from app.views.views_android_jishi import Android_IndexHandler as ai
 from app.views.views_android_log import LogHandler as alog
+from app.views.views_ajax import AjaxHandler as ah,AjaxHandlerClose as ahc
 #配置视图路由映射规则
 urls = [
     (r"/",index),
@@ -20,4 +21,6 @@ urls = [
     (r"/fgh/",fgh),
     (r"/ai/",ai),
     (r"/alog/",alog),
+    (r"/ah/",ah),
+    (r"/ahc/",ahc),
 ]+SockJSRouter(time_handler,"/real/time").urls

@@ -3,22 +3,8 @@ import datetime
 from pyecharts import Liquid,Gauge,Pie,Line
 
 class chart(object):
-    #水球图
-    def Liquid_html(self,chard_id,title,val):
-        liquid = Liquid(
-            "{}-{}".format(self.dt,title),
-            title_pos="center",
-            width="100%",
-            title_color="white",
-            title_text_size=14,
-            height=300
-        )
-        liquid.chart_id = chard_id
-        liquid.add("",[round(val/100,4)])
-        return liquid.render_embed() #返回图表的html代码
-
-    #仪表图
-    def Gauge_html(self,chard_id,title,val):
+    #空气温度仪表图
+    def Gauge_html_kw(self,chard_id,title,val):
         gauge = Gauge(
             "{}-{}".format(self.dt, title),
             title_pos="center",
@@ -32,46 +18,91 @@ class chart(object):
             "",
             "",
             val,
-            scale_range=[0,100],
+            scale_range=[0,35],
             is_legend_show=False
         )
         return gauge.render_embed()
-    #饼图
-    def pie_html(self,chard_id,title,sub_title1,sub_title2,key1,key2,val1,val2):
-        #实例化饼状图
-        pie = Pie(
-            "{}-{}".format(self.dt,title),
+
+    # 空气湿度仪表图
+    def Gauge_html_ks(self, chard_id, title, val):
+        gauge = Gauge(
+            "{}-{}".format(self.dt, title),
             title_pos="center",
             width="100%",
-            height=300,
+            title_color="white",
             title_text_size=14,
-            title_color="white"
+            height=300
         )
-        #指定id
-        pie.chart_id = chard_id
-        pie.add(
-            sub_title1,
-            key1,
-            val1,
-            center=[25,50],
-            is_random=True,
-            radius=[30,75],
-            rosetype="area",
-            is_legend_show=False,
-            is_label_show=True
+        gauge.chart_id = chard_id
+        gauge.add(
+            "",
+            "",
+            val,
+            scale_range=[0, 100],
+            is_legend_show=False
         )
-        pie.add(
-            sub_title2,
-            key2,
-            val2,
-            center=[75, 50],
-            is_random=True,
-            radius=[30, 75],
-            rosetype="area",
-            is_legend_show=False,
-            is_label_show=True
+        return gauge.render_embed()
+
+    # 土壤温度仪表图
+    def Gauge_html_tw(self, chard_id, title, val):
+        gauge = Gauge(
+            "{}-{}".format(self.dt, title),
+            title_pos="center",
+            width="100%",
+            title_color="white",
+            title_text_size=14,
+            height=300
         )
-        return pie.render_embed()
+        gauge.chart_id = chard_id
+        gauge.add(
+            "",
+            "",
+            val,
+            scale_range=[5, 40],
+            is_legend_show=False
+        )
+        return gauge.render_embed()
+
+    # 土壤湿度仪表图
+    def Gauge_html_ts(self, chard_id, title, val):
+        gauge = Gauge(
+            "{}-{}".format(self.dt, title),
+            title_pos="center",
+            width="100%",
+            title_color="white",
+            title_text_size=14,
+            height=300
+        )
+        gauge.chart_id = chard_id
+        gauge.add(
+            "",
+            "",
+            val,
+            scale_range=[-30, 60],
+            is_legend_show=False
+        )
+        return gauge.render_embed()
+
+    # 光照强度仪表图
+    def Gauge_html_gq(self, chard_id, title, val):
+        gauge = Gauge(
+            "{}-{}".format(self.dt, title),
+            title_pos="center",
+            width="100%",
+            title_color="white",
+            title_text_size=14,
+            height=300
+        )
+        gauge.chart_id = chard_id
+        gauge.add(
+            "",
+            "",
+            val,
+            scale_range=[0,3000],
+            is_legend_show=False
+        )
+        return gauge.render_embed()
+
     #折现面积图
     def line_html(self,title,key,value,color=None):
         line = Line(

@@ -3,7 +3,7 @@ import datetime
 from app.views.views_common import Commonhandler
 from sqlalchemy import and_,func
 from app.tools.orm import ORM
-from app.models.models import Cpu,Mem,Swap
+from app.models.models import Cpu,Mem,Swap,Kongqiwendu,Kongqishidu,Turangwendu,Turangshidu,Guangzhao
 from app.tools.chart import chart
 import tornado.gen
 import tornado.concurrent
@@ -20,140 +20,221 @@ class LogHandler(Commonhandler):
         c = chart()
         # id为1表示1小时内
         if int(id) == 1:
-            attr_swap, attr_mem, attr_cpu, vals_swap, vals_mem, vals_cpu = self.data_by_hour()
-            # 内存折线图
-            if attr_mem and vals_mem:
-                data["mem_line"] = c.line_html(
-                    "湿度数据[1小时内]",
-                    attr_mem,
-                    vals_mem,
+            attr_kongqiwendu, attr_kongqishidu, attr_turangshidu, attr_turangwendu, attr_guangzhao, vals_guangzhao, vals_kongqiwendu, vals_turangshidu, vals_turangwendu, vals_kongqishidu = self.data_by_hour()
+            # 空气温度
+            if attr_kongqiwendu and vals_kongqiwendu:
+                data["kongqiwendu"] = c.line_html(
+                    "空气温度数据[1小时内]",
+                    attr_kongqiwendu,
+                    vals_kongqiwendu,
                     "green"
                 )
             else:
-                data["mem_line"] = "<div class='alert alert-danger'>没有湿度数据</div>"
-            # 交换分区折线图
-            if attr_swap and vals_swap:
-                data["swap_line"] = c.line_html(
-                    "光照数据[1小时内]",
-                    attr_swap,
-                    vals_swap,
-                    "red"
+                data["kongqiwendu"] = "<div class='alert alert-danger'>没有温度数据</div>"
+            # 空气湿度
+            if attr_kongqishidu and vals_kongqishidu:
+                data["kongqishidu"] = c.line_html(
+                    "空气湿度数据[1小时内]",
+                    attr_kongqishidu,
+                    vals_kongqishidu,
+                    "green"
                 )
             else:
-                data["swap_line"] = "<div class='alert alert-danger'>没有光照数据</div>"
-            # CPU折线图
-            if attr_cpu and vals_cpu:
-                data["cpu_line"] = c.line_html(
-                    "温度数据[1小时内]",
-                    attr_cpu,
-                    vals_cpu,
-                    "blue"
+                data["kongqishidu"] = "<div class='alert alert-danger'>没有湿度数据</div>"
+            # 土壤温度
+            if attr_turangwendu and vals_turangwendu:
+                data["turangwendu"] = c.line_html(
+                    "土壤温度数据[1小时内]",
+                    attr_turangwendu,
+                    vals_turangwendu,
+                    "green"
                 )
             else:
-                data["cpu_line"] = "<div class='alert alert-danger'>没有温度数据</div>"
+                data["turangwendu"] = "<div class='alert alert-danger'>没有土壤温度数据</div>"
+            # 土壤湿度
+            if attr_turangshidu and vals_turangshidu:
+                data["turangshidu"] = c.line_html(
+                    "土壤湿度数据[1小时内]",
+                    attr_turangshidu,
+                    vals_turangshidu,
+                    "green"
+                )
+            else:
+                data["turangshidu"] = "<div class='alert alert-danger'>没有土壤湿度数据</div>"
+            # 光照强度
+            if attr_guangzhao and vals_guangzhao:
+                data["guangzhao"] = c.line_html(
+                    "光照强度数据[1小时内]",
+                    attr_guangzhao,
+                    vals_guangzhao,
+                    "green"
+                )
+            else:
+                data["guangzhao"] = "<div class='alert alert-danger'>没有光照数据</div>"
+
         # id为2表示1天内
         if int(id) == 2:
-            attr_mem, vals_mem_max, vals_mem_min, vals_mem_avg, attr_swap, vals_swap_max, vals_swap_min, vals_swap_avg, attr_cpu, vals_cpu_max, vals_cpu_min, vals_cpu_avg = self.data_mm()
-            if attr_mem and vals_mem_max and vals_mem_min and vals_mem_avg:
-                data['mem_line'] = c.line_three_html(
-                    "湿度数据今天",
-                    attr_mem,
-                    vals_mem_min,
-                    vals_mem_max,
-                    vals_mem_avg
+            attr_kongqiwendu,vals_kongqiwendu_max,vals_kongqiwendu_min,vals_kongqiwendu_avg, \
+            attr_kongqishidu, vals_kongqishidu_max, vals_kongqishidu_min, vals_kongqishidu_avg, \
+            attr_turangwendu, vals_turangwendu_max, vals_turangwendu_min, vals_turangwendu_avg, \
+            attr_turangshidu, vals_turangshidu_max, vals_turangshidu_min, vals_turangshidu_avg, \
+            attr_guangzhao, vals_guangzhao_max, vals_guangzhao_min, vals_guangzhao_avg = self.data_mm()
+            if attr_kongqiwendu and vals_kongqiwendu_max and vals_kongqiwendu_min and vals_kongqiwendu_avg:
+                data['kongqiwendu'] = c.line_three_html(
+                    "空气温度今天",
+                    attr_kongqiwendu,
+                    vals_kongqiwendu_min,
+                    vals_kongqiwendu_max,
+                    vals_kongqiwendu_avg
                 )
             else:
-                data["mem_line"] = "<div class='alert alert-danger'>没有湿度数据[今天]数据</div>"
-            if attr_swap and vals_swap_max and vals_swap_min and vals_swap_avg:
-                data['swap_line'] = c.line_three_html(
+                data["kongqiwendu"] = "<div class='alert alert-danger'>没有空气温度[今天]数据</div>"
+            if attr_kongqishidu and vals_kongqishidu_max and vals_kongqishidu_min and vals_kongqishidu_avg:
+                data['kongqishidu'] = c.line_three_html(
+                    "空气湿度今天",
+                    attr_kongqishidu,
+                    vals_kongqishidu_min,
+                    vals_kongqishidu_max,
+                    vals_kongqishidu_avg
+                )
+            else:
+                data["kongqishidu"] = "<div class='alert alert-danger'>没有空气湿度[今天]数据</div>"
+            if attr_turangwendu and vals_turangwendu_max and vals_turangwendu_min and vals_turangwendu_avg:
+                data['turangwendu'] = c.line_three_html(
+                    "土壤温度今天",
+                    attr_turangwendu,
+                    vals_turangwendu_min,
+                    vals_turangwendu_max,
+                    vals_turangwendu_avg
+                )
+            else:
+                data["turangwendu"] = "<div class='alert alert-danger'>没有土壤温度[今天]数据</div>"
+            if attr_turangshidu and vals_turangshidu_max and vals_turangshidu_min and vals_turangshidu_avg:
+                data['turangshidu'] = c.line_three_html(
+                    "土壤湿度今天",
+                    attr_turangshidu,
+                    vals_turangshidu_min,
+                    vals_turangshidu_max,
+                    vals_turangshidu_avg
+                )
+            else:
+                data["turangshidu"] = "<div class='alert alert-danger'>没有土壤湿度[今天]数据</div>"
+            if attr_guangzhao and vals_guangzhao_max and vals_guangzhao_min and vals_guangzhao_avg:
+                data['guangzhao'] = c.line_three_html(
                     "光照数据今天",
-                    attr_swap,
-                    vals_swap_min,
-                    vals_swap_max,
-                    vals_swap_avg
+                    attr_guangzhao,
+                    vals_guangzhao_min,
+                    vals_guangzhao_max,
+                    vals_guangzhao_avg
                 )
             else:
-                data["swap_line"] = "<div class='alert alert-danger'>没有光照数据[今天]数据</div>"
-            if attr_cpu and vals_cpu_max and vals_cpu_min and vals_cpu_avg:
-                data['cpu_line'] = c.line_three_html(
-                    "温度数据今天",
-                    attr_cpu,
-                    vals_cpu_min,
-                    vals_cpu_max,
-                    vals_cpu_avg
-                )
-            else:
-                data["cpu_line"] = "<div class='alert alert-danger'>没有温度数据[今天]数据</div>"
+                data["guangzhao"] = "<div class='alert alert-danger'>没有光照[今天]数据</div>"
+
         # id为3表示1月内
         if int(id) == 3:
-            attr_mem, vals_mem_max, vals_mem_min, vals_mem_avg, \
-            attr_swap, vals_swap_max, vals_swap_min, vals_swap_avg, \
-            attr_cpu, vals_cpu_max, vals_cpu_min, vals_cpu_avg = self.data_mm(method="month", format="%Y%m%d")
-            if attr_mem and vals_mem_max and vals_mem_min and vals_mem_avg:
-                data['mem_line'] = c.line_three_html(
-                    "湿度数据本月",
-                    attr_mem,
-                    vals_mem_min,
-                    vals_mem_max,
-                    vals_mem_avg
+            attr_kongqiwendu, vals_kongqiwendu_max, vals_kongqiwendu_min, vals_kongqiwendu_avg, \
+            attr_kongqishidu, vals_kongqishidu_max, vals_kongqishidu_min, vals_kongqishidu_avg, \
+            attr_turangwendu, vals_turangwendu_max, vals_turangwendu_min, vals_turangwendu_avg, \
+            attr_turangshidu, vals_turangshidu_max, vals_turangshidu_min, vals_turangshidu_avg, \
+            attr_guangzhao, vals_guangzhao_max, vals_guangzhao_min, vals_guangzhao_avg = self.data_mm(method="month", format="%Y%m%d")
+            if attr_kongqiwendu and vals_kongqiwendu_max and vals_kongqiwendu_min and vals_kongqiwendu_avg:
+                data['kongqiwendu'] = c.line_three_html(
+                    "空气温度本月",
+                    attr_kongqiwendu,
+                    vals_kongqiwendu_min,
+                    vals_kongqiwendu_max,
+                    vals_kongqiwendu_avg
                 )
             else:
-                data["mem_line"] = "<div class='alert alert-danger'>没有湿度数据[本月]数据</div>"
-            if attr_swap and vals_swap_max and vals_swap_min and vals_swap_avg:
-                data['swap_line'] = c.line_three_html(
+                data["kongqiwendu"] = "<div class='alert alert-danger'>没有空气温度[本月]数据</div>"
+            if attr_kongqishidu and vals_kongqishidu_max and vals_kongqishidu_min and vals_kongqishidu_avg:
+                data['kongqishidu'] = c.line_three_html(
+                    "空气湿度本月",
+                    attr_kongqishidu,
+                    vals_kongqishidu_min,
+                    vals_kongqishidu_max,
+                    vals_kongqishidu_avg
+                )
+            else:
+                data["kongqishidu"] = "<div class='alert alert-danger'>没有空气湿度[本月]数据</div>"
+            if attr_turangwendu and vals_turangwendu_max and vals_turangwendu_min and vals_turangwendu_avg:
+                data['turangwendu'] = c.line_three_html(
+                    "土壤温度本月",
+                    attr_turangwendu,
+                    vals_turangwendu_min,
+                    vals_turangwendu_max,
+                    vals_turangwendu_avg
+                )
+            else:
+                data["turangwendu"] = "<div class='alert alert-danger'>没有土壤温度[本月]数据</div>"
+            if attr_turangshidu and vals_turangshidu_max and vals_turangshidu_min and vals_turangshidu_avg:
+                data['turangshidu'] = c.line_three_html(
+                    "土壤湿度本月",
+                    attr_turangshidu,
+                    vals_turangshidu_min,
+                    vals_turangshidu_max,
+                    vals_turangshidu_avg
+                )
+            else:
+                data["turangshidu"] = "<div class='alert alert-danger'>没有土壤湿度[本月]数据</div>"
+            if attr_guangzhao and vals_guangzhao_max and vals_guangzhao_min and vals_guangzhao_avg:
+                data['guangzhao'] = c.line_three_html(
                     "光照数据本月",
-                    attr_swap,
-                    vals_swap_min,
-                    vals_swap_max,
-                    vals_swap_avg
+                    attr_guangzhao,
+                    vals_guangzhao_min,
+                    vals_guangzhao_max,
+                    vals_guangzhao_avg
                 )
             else:
-                data["swap_line"] = "<div class='alert alert-danger'>没有光照数据[本月]数据</div>"
-            if attr_cpu and vals_cpu_max and vals_cpu_min and vals_cpu_avg:
-                data['cpu_line'] = c.line_three_html(
-                    "温度数据本月",
-                    attr_cpu,
-                    vals_cpu_min,
-                    vals_cpu_max,
-                    vals_cpu_avg
-                )
-            else:
-                data["cpu_line"] = "<div class='alert alert-danger'>没有温度数据[本月]数据</div>"
-        return self.html("log.html", data=dict(
-            line_cpu=data["cpu_line"],
-            line_mem=data["mem_line"],
-            line_swap=data["swap_line"]
+                data["guangzhao"] = "<div class='alert alert-danger'>没有光照[本月]数据</div>"
+
+        return self.html("log.html", hisdata=dict(
+            kongqiwendu=data["kongqiwendu"],
+            kongqishidu=data["kongqishidu"],
+            turangwendu = data["turangwendu"],
+            turangshidu=data["turangshidu"],
+            guangzhao = data["guangzhao"]
         ))
 
     #一小时内数据查询
     def data_by_hour(self):
         now_time,next_time = self.dt_range()
-        attr_cpu,attr_mem,attr_swap = None,None,None
-        vals_cpu, vals_mem, vals_swap = None, None, None
+        attr_kongqiwendu,attr_kongqishidu,attr_turangwendu,attr_turangshidu,attr_guangzhao = None,None,None,None,None
+        vals_kongqiwendu, vals_kongqishidu, vals_turangwendu,vals_turangshidu,vals_guangzhao = None, None, None,None,None
         session = ORM.db()
         try:
-            #内存
-            mem = self.one_hour_query(Mem,session,now_time,next_time)
-            if mem :
-                attr_mem = [v.create_time.strftime("%H:%M:%S") for v in mem ]
-                vals_mem = [float(v.percent) for v in mem]
-            #交换分区
-            swap = self.one_hour_query(Swap, session, now_time, next_time)
-            if swap:
-                attr_swap = [v.create_time.strftime("%H:%M:%S") for v in swap]
-                vals_swap = [float(v.percent) for v in swap]
-            #CPU
-            cpu = self.one_hour_query(Cpu, session, now_time, next_time)
-            if cpu:
-                attr_cpu = [v.create_time.strftime("%H:%M:%S") for v in cpu]
-                vals_cpu = [float(v.percent) for v in cpu]
+            #空气温度
+            kw = self.one_hour_query(Kongqiwendu,session,now_time,next_time)
+            if kw :
+                attr_kongqiwendu = [v.create_time.strftime("%H:%M:%S") for v in kw ]
+                vals_kongqiwendu = [float(v.percent) for v in kw]
+            # 空气湿度
+            ks = self.one_hour_query(Kongqishidu, session, now_time, next_time)
+            if ks:
+                attr_kongqishidu = [v.create_time.strftime("%H:%M:%S") for v in ks]
+                vals_kongqishidu = [float(v.percent) for v in ks]
+            # 土壤温度
+            tw = self.one_hour_query(Turangwendu, session, now_time, next_time)
+            if tw:
+                attr_turangwendu = [v.create_time.strftime("%H:%M:%S") for v in tw]
+                vals_turangwendu = [float(v.percent) for v in tw]
+            # 土壤湿度
+            ts = self.one_hour_query(Turangshidu, session, now_time, next_time)
+            if ts:
+                attr_turangshidu = [v.create_time.strftime("%H:%M:%S") for v in ts]
+                vals_turangshidu = [float(v.percent) for v in ts]
+            #光照强度
+            gq = self.one_hour_query(Guangzhao,session,now_time,next_time)
+            if gq :
+                attr_guangzhao = [v.create_time.strftime("%H:%M:%S") for v in gq ]
+                vals_guangzhao = [float(v.percent) for v in gq]
         except Exception as e:
             session.rollback()
         else:
             session.commit()
         finally:
             session.close()
-        return attr_swap,attr_mem,attr_cpu,vals_swap,vals_mem,vals_cpu
+        return attr_kongqiwendu,attr_kongqishidu,attr_turangshidu,attr_turangwendu,attr_guangzhao,vals_guangzhao,vals_kongqiwendu,vals_turangshidu,vals_turangwendu,vals_kongqishidu
     #一小时查询方法
     def one_hour_query(self,model,session,now_time,next_time):
         data = session.query(model).order_by(model.create_dt.asc()).filter(
@@ -167,35 +248,53 @@ class LogHandler(Commonhandler):
     #按天查询最大最小和平均值
     def data_mm(self,method="Day",format="%Y%m%d%H" ):
         session = ORM.db()
-        attr_mem,vals_mem_max,vals_mem_min,vals_mem_avg = None,None,None,None
-        attr_swap, vals_swap_max, vals_swap_min, vals_swap_avg = None, None, None, None
-        attr_cpu, vals_cpu_max, vals_cpu_min, vals_cpu_avg = None, None, None, None
+        attr_kongqiwendu, vals_kongqiwendu_max, vals_kongqiwendu_min, vals_kongqiwendu_avg = None,None,None,None
+        attr_kongqishidu, vals_kongqishidu_max, vals_kongqishidu_min, vals_kongqishidu_avg = None,None,None,None
+        attr_turangwendu, vals_turangwendu_max, vals_turangwendu_min, vals_turangwendu_avg = None,None,None,None
+        attr_turangshidu, vals_turangshidu_max, vals_turangshidu_min, vals_turangshidu_avg = None,None,None,None
+        attr_guangzhao, vals_guangzhao_max, vals_guangzhao_min, vals_guangzhao_avg = None,None,None,None
         try:
-            #内存
-            mem = self.three_query(Mem,session,method,format)
-            attr_mem = [ v[0] for v in mem]
-            vals_mem_max = [ float(v[1]) for v in mem]
-            vals_mem_min = [ float(v[2]) for v in mem]
-            vals_mem_avg = [ round(float(v[3]),1) for v in mem]
-            #交换分区
-            swap = self.three_query(Swap, session, method, format)
-            attr_swap = [v[0] for v in swap]
-            vals_swap_max = [float(v[1]) for v in swap]
-            vals_swap_min = [float(v[2]) for v in swap]
-            vals_swap_avg = [round(float(v[3]),1) for v in swap]
-            #CPU
-            cpu = self.three_query(Cpu, session, method, format)
-            attr_cpu = [v[0] for v in cpu]
-            vals_cpu_max = [float(v[1]) for v in cpu]
-            vals_cpu_min = [float(v[2]) for v in cpu]
-            vals_cpu_avg = [round(float(v[3]),1) for v in cpu]
+            #空气温度
+            kongqiwendu = self.three_query(Kongqiwendu,session,method,format)
+            attr_kongqiwendu = [ v[0] for v in kongqiwendu]
+            vals_kongqiwendu_max = [ float(v[1]) for v in kongqiwendu]
+            vals_kongqiwendu_min = [ float(v[2]) for v in kongqiwendu]
+            vals_kongqiwendu_avg = [ round(float(v[3]),1) for v in kongqiwendu]
+            # 空气湿度
+            kongqishidu = self.three_query(Kongqishidu, session, method, format)
+            attr_kongqishidu = [v[0] for v in kongqishidu]
+            vals_kongqishidu_max = [float(v[1]) for v in kongqishidu]
+            vals_kongqishidu_min = [float(v[2]) for v in kongqishidu]
+            vals_kongqishidu_avg = [round(float(v[3]), 1) for v in kongqishidu]
+            # 土壤温度
+            turangwendu = self.three_query(Turangwendu, session, method, format)
+            attr_turangwendu = [v[0] for v in turangwendu]
+            vals_turangwendu_max = [float(v[1]) for v in turangwendu]
+            vals_turangwendu_min = [float(v[2]) for v in turangwendu]
+            vals_turangwendu_avg = [round(float(v[3]), 1) for v in turangwendu]
+            # 土壤湿度
+            turangshidu = self.three_query(Turangshidu, session, method, format)
+            attr_turangshidu = [v[0] for v in turangshidu]
+            vals_turangshidu_max = [float(v[1]) for v in turangshidu]
+            vals_turangshidu_min = [float(v[2]) for v in turangshidu]
+            vals_turangshidu_avg = [round(float(v[3]), 1) for v in turangshidu]
+            # 光照强度
+            guangzhao = self.three_query(Guangzhao, session, method, format)
+            attr_guangzhao = [v[0] for v in guangzhao]
+            vals_guangzhao_max = [float(v[1]) for v in guangzhao]
+            vals_guangzhao_min = [float(v[2]) for v in guangzhao]
+            vals_guangzhao_avg = [round(float(v[3]), 1) for v in guangzhao]
         except Exception as e:
             session.rollback()
         else:
             session.commit()
         finally:
             session.close()
-        return attr_mem,vals_mem_max,vals_mem_min,vals_mem_avg,attr_swap, vals_swap_max, vals_swap_min, vals_swap_avg,attr_cpu, vals_cpu_max, vals_cpu_min, vals_cpu_avg
+        return attr_kongqiwendu,vals_kongqiwendu_max,vals_kongqiwendu_min,vals_kongqiwendu_avg, \
+            attr_kongqishidu, vals_kongqishidu_max, vals_kongqishidu_min, vals_kongqishidu_avg, \
+            attr_turangwendu, vals_turangwendu_max, vals_turangwendu_min, vals_turangwendu_avg, \
+            attr_turangshidu, vals_turangshidu_max, vals_turangshidu_min, vals_turangshidu_avg, \
+            attr_guangzhao, vals_guangzhao_max, vals_guangzhao_min, vals_guangzhao_avg
     #查询最大值最小值平均值方法
     def three_query(self,model,session,method="Day",format="%Y%m%d%H"):
         model_query = session.query(
